@@ -31,7 +31,7 @@ public class Address {
 	private String country;
 	
 	@OneToOne
-	@JoinColumn(name = "address")
+	@JoinColumn(name = "center_id")
 	private Center center;
 
 	public Address(String noHome, String street, String district, String city, String country) {

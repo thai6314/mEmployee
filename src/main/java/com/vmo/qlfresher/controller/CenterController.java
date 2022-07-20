@@ -2,6 +2,8 @@ package com.vmo.qlfresher.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +21,7 @@ public class CenterController {
 	private CenterService centerService;
 
 	@PostMapping(path = "/create", consumes = { "application/json" })
-	public Center createCenter(@RequestBody Center center) {
+	public Center createCenter(@RequestBody @Valid Center center) {
 		return centerService.create(center);
 	}
 

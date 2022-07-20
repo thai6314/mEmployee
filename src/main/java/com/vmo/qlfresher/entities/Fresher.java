@@ -7,8 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+
 
 @Entity
 public class Fresher {
@@ -34,10 +33,6 @@ public class Fresher {
 	@ManyToOne
 	@JoinColumn(name = "center_id")
 	private Center center;
-	
-	@OneToOne
-	@JoinColumn(name = "point_id")
-	private Point point;
 
 	public int getId() {
 		return id;

@@ -12,8 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.validation.constraints.*;
 
 @Entity
 
@@ -22,32 +21,32 @@ public class Center {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@NotNull(message = "Name shouldn't be null")
 	@Column(name="name")
 	private String name;
-
+	
+	@Email
 	@Column(name = "email")
 	private String email;
 	
+	@Pattern(regexp = "^(0?)(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-6|8|9]|9[0-4|6-9])[0-9]{7}$", message = "Invalid phone number entered")
 	@Column(name = "phone_number")
 	private String phoneNumber;
 	
 	@Column(name="description")
 	private String description;
 	
-	
+	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Minimum eight characters, at least one letter and one number")
 	@Column(name = "password")
 	private String password;
 	
-	@OneToMany(mappedBy = "fresher")
+	@OneToMany(mappedBy = "center")
 	private List<Fresher> freshers;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	@JoinTable(name = "center_role", joinColumns = @JoinColumn(name = "center_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private List<Role> roles;
 	
-	@OneToOne
-	@JoinColumn(name = "address_id")
-	private Address address;
 	
 	public Center(String name, String email, String phoneNumber, String description, String password) {
 		super();
@@ -111,8 +110,8 @@ public class Center {
 		return freshers;
 	}
 
-	public void setFreshsers(List<Fresher> freshsers) {
-		this.freshers = freshsers;
+	public void setFreshsers(List<Fresher> freshers) {
+		this.freshers = freshers;
 	}
 
 	public List<Role> getRoles() {
@@ -123,13 +122,6 @@ public class Center {
 		this.roles = roles;
 	}
 
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
 	
 	
 }

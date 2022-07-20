@@ -29,7 +29,7 @@ public class Point {
 	private float mediumScore;
 	
 	@OneToOne
-	@JoinColumn(name = "point")
+	@JoinColumn(name = "fresher_id")
 	private Fresher fresher;
 	
 	public Point() {}

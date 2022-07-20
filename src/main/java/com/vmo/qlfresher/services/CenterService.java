@@ -1,7 +1,6 @@
 package com.vmo.qlfresher.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +15,7 @@ public class CenterService implements CrudService<Center>{
 	private CenterRepository centerRepo;
 
 	@Override
-	public Center create(Center center) {
-		//Center centerTemp = centerRepo.save(center);
-		
+	public Center create(Center center) {		
 		return centerRepo.save(center);
 	}
 
@@ -44,6 +41,10 @@ public class CenterService implements CrudService<Center>{
 	public String delete(int id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public Center findCenterByName(String name) {
+		return centerRepo.findCenterByName(name);
 	}
 
 
