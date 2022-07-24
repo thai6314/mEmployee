@@ -5,13 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
-
-public class Center {
+public class Company {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -30,35 +29,51 @@ public class Center {
 	
 	@Column(name="description")
 	private String description;
-
-	@ManyToOne
-	@JoinColumn(name = "company_id")
-	private Company company;
 	
-	public Center(String name, String email, String phoneNumber, String description,Company company) {
+	
+//	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "Minimum eight characters, at least one letter and one number")
+	@Column(name = "password")
+	private String password;
+	
+//	@OneToMany(mappedBy = "company")
+//	private List<Center> centers;
+	
+	public Company() {}
+
+	public Company(String name,String email,String phoneNumber, String description) {
 		super();
 		this.name = name;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.description = description;
-		this.company = company;
 	}
-	public Center(int id, String name, String email, String phoneNumber, String description,Company company) {
+	
+	public Company(int id, String name,String email,String phoneNumber, String description, String password) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.description = description;
-		this.company = company;
+		this.password = password;
+	
 	}
-	public Company getCompany() {
-		return company;
+
+	public String getPassword() {
+		return password;
 	}
-	public void setCompany(Company company) {
-		this.company = company;
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
-	public Center() {}
+//
+//	public List<Center> getCenters() {
+//		return centers;
+//	}
+//
+//	public void setCenters(List<Center> centers) {
+//		this.centers = centers;
+//	}
 
 	public int getId() {
 		return id;
@@ -99,15 +114,4 @@ public class Center {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-//
-//	public List<Fresher> getFreshers() {
-//		return freshers;
-//	}
-//
-//	public void setFreshers(List<Fresher> freshers) {
-//		this.freshers = freshers;
-//	}
-//	
-	
 }

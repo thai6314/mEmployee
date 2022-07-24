@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.vmo.qlfresher.exception.BadRequestException;
+import com.vmo.qlfresher.exception.ResponseException;
+
 @RestControllerAdvice
 public class ApplicationExceptionHandler {
 	
@@ -23,4 +26,14 @@ public class ApplicationExceptionHandler {
 		});
 		return errorMap;
 	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(BadRequestException.class)
+	public Map<String, String> handlerBusinessException(BadRequestException ex){
+		Map<String, String> errorMap = new HashMap();
+		ResponseException resReception = ex.getResponseException();
+		errorMap.put(resReception.getError(), resReception.getMessage());
+		return errorMap;
+	}
 }
+
