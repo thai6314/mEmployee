@@ -11,16 +11,19 @@ import com.vmo.qlfresher.entities.Fresher;
 
 @Repository
 public interface FresherRepository extends JpaRepository<Fresher, Integer>{
-	public Fresher findFresherByEmail(String email);
+	@Query("SELECT f FROM Fresher f WHERE f.email = :email")
+	public Fresher findFresherByEmail(@Param("email") String email);
 	
-	public List<Fresher> findFresherByName(String fullname);
+	@Query("SELECT f FROM Fresher f WHERE f.fullname = :fullname")
+	public List<Fresher> findFresherByName(@Param("fullname") String fullname);
 	
-	@Query(value = "SELECT e FROM fresher e WHERE e.programing_language = :programing_language")
+	@Query("SELECT f FROM Fresher f WHERE f.programingLanguage = :programing_language")
 	public List<Fresher> findFresherByProgramingLanguage(@Param("programing_language") String programingLanguage);
 	
-	@Query(value = "SELECT e FROM fresher e WHERE e.center_id = :center_id")
+	@Query("SELECT f FROM Fresher f WHERE f.center.id = :center_id")
 	public List<Fresher> findAllFresherByCenterId(@Param("center_id") int centerId);
 	
-	@Query(value = "SELECT e FROM fresher e WHERE e.company_id = :company_id")
+	@Query("SELECT f FROM Fresher f WHERE f.company.id = :company_id")
 	public List<Fresher> findAllFresherByCompanyId(@Param("company_id") int companyId);
+	
 }

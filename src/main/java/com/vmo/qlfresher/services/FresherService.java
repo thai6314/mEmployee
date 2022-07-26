@@ -14,6 +14,7 @@ import com.vmo.qlfresher.entities.Point;
 import com.vmo.qlfresher.exception.BadRequestException;
 import com.vmo.qlfresher.exception.ResponseException;
 import com.vmo.qlfresher.repositories.FresherRepository;
+import com.vmo.qlfresher.repositories.PointRepository;
 
 @Service
 public class FresherService {
@@ -21,15 +22,21 @@ public class FresherService {
 	@Autowired
 	private FresherRepository fresherRepo;
 	
+	@Autowired
+	private PointRepository pointRepo;
+	
 	private ResponseException resException;
 	
 	public Fresher create(Fresher fresher) {
 		Fresher fresherTemp = fresherRepo.findFresherByEmail(fresher.getEmail());
 		if(fresherTemp == null) {
+			return fresherRepo.save(fresher);
+			
+		}else {
 			resException = new ResponseException("error", "This email dose not exist");
 			throw new BadRequestException(resException);
 		}
-		return fresherRepo.save(fresher);
+		
 	}
 	
 	public Fresher update(Fresher fresher, int id) {
@@ -133,9 +140,13 @@ public class FresherService {
 		}else {
 			float mediumScore = (point.getPoint1() + point.getPoint2() + point.getPoint3())/3;
 			point.setMediumScore(mediumScore);
+			
+			pointRepo.save(point);
 			return point;
 		}
 
 	}
+	
+	
 	
 }
