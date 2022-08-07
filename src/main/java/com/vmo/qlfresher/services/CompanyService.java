@@ -1,6 +1,10 @@
 package com.vmo.qlfresher.services;
 
 import java.util.HashMap;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.*;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +24,7 @@ import com.vmo.qlfresher.repositories.FresherRepository;
 import com.vmo.qlfresher.repositories.PointRepository;
 
 @Service
-public class CompanyService {
+public class CompanyService{
 
 	@Autowired
 	private CompanyRepository companyRepo;
@@ -51,20 +55,6 @@ public class CompanyService {
 		}
 	}
 
-	public Company update(Company company, int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Company getById(int id) {
-
-		return null;
-	}
-
-	public List<Company> getAll() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	public Map<String, String> delete(int id) {
 		Map<String, String> result = new HashMap<String, String>();
@@ -115,6 +105,15 @@ public class CompanyService {
 		amountPoint.put("Between 6.5 - 9", pointRepo.amountGood());
 		amountPoint.put("Greater than or equal to 9", pointRepo.amountVeryGood(9));
 		return amountPoint;
+	}
+
+	public UserDetails loadUserById(int id) {
+		Optional<Company> company = companyRepo.findById(id);
+		if(company.isEmpty()) {
+			responseException = new ResponseException("error", "Company not found");
+			throw new BadRequestException(responseException);
+		}
+		return (UserDetails) company.orElseThrow();
 	}
 
 }

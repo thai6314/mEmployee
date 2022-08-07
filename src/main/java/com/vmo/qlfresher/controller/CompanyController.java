@@ -23,9 +23,10 @@ import com.vmo.qlfresher.services.CompanyService;
 @RestController
 @RequestMapping(path = "/company")
 public class CompanyController {
+
 	@Autowired
 	private CompanyService companyService;
-	
+
 	@PostMapping(path = "/create", consumes = {"application/json"})
 	public Company createCompany(@RequestBody @Valid Company company) {
 		return companyService.create(company);
