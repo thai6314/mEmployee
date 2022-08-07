@@ -1,5 +1,7 @@
 package com.vmo.qlfresher.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,12 +20,10 @@ public class CompanyDetailService implements UserDetailsService {
 	private CompanyRepository companyRepo;
 	@Autowired
 	private ResponseException responseException;
-
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		
 		Company company = companyRepo.finCompanyByEmail(email);
-		
 		if (company == null) {
 			responseException = new ResponseException("error", "Company not found");
 			throw new BadRequestException(responseException);
