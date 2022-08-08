@@ -24,7 +24,7 @@ import com.vmo.qlfresher.repositories.FresherRepository;
 import com.vmo.qlfresher.repositories.PointRepository;
 
 @Service
-public class CompanyService{
+public class CompanyService {
 
 	@Autowired
 	private CompanyRepository companyRepo;
@@ -37,7 +37,7 @@ public class CompanyService{
 
 	@Autowired
 	private FresherRepository fresherRepo;
-	
+
 	@Autowired
 	private PointRepository pointRepo;
 
@@ -55,7 +55,6 @@ public class CompanyService{
 		}
 	}
 
-
 	public Map<String, String> delete(int id) {
 		Map<String, String> result = new HashMap<String, String>();
 		Optional<Company> company = companyRepo.findById(id);
@@ -69,37 +68,35 @@ public class CompanyService{
 		}
 	}
 
-	public List<Fresher> addFresherToCenter(int centerId, int fresherId){
+	public List<Fresher> addFresherToCenter(int centerId, int fresherId) {
 		Optional<Fresher> fresherTemp = fresherRepo.findById(fresherId);
 		Optional<Center> centerTemp = centerRepo.findById(centerId);
-		if(centerTemp.isEmpty()) {
+		if (centerTemp.isEmpty()) {
 			responseException = new ResponseException("error", "This center does not exist");
 			throw new BadRequestException(responseException);
-		}
-		else if(fresherTemp.isEmpty()) {
+		} else if (fresherTemp.isEmpty()) {
 			responseException = new ResponseException("error", "This fresher does not exist");
 			throw new BadRequestException(responseException);
-		}
-		else {
+		} else {
 			fresherTemp.orElseThrow().setCenter(centerTemp.orElseThrow());
 			fresherRepo.save(fresherTemp.orElseThrow());
 		}
-		
+
 		return fresherRepo.findAllFresherByCenterId(centerId);
 	}
-	
-	public Map<String, Integer> FresherStatistics(int companyId){
+
+	public Map<String, Integer> FresherStatistics(int companyId) {
 		List<Center> centers = centerRepo.findCenterByCompanyId(companyId);
 		Map<String, Integer> amountFresher = new HashMap<String, Integer>();
-		
-		centers.forEach(center ->{
+
+		centers.forEach(center -> {
 			amountFresher.put(center.getName(), fresherRepo.findAllFresherByCenterId(center.getId()).size());
 		});
-		
+
 		return amountFresher;
-	} 
-	
-	public Map<String, Integer> pointStaistics(int companyId){
+	}
+
+	public Map<String, Integer> pointStaistics(int companyId) {
 		Map<String, Integer> amountPoint = new HashMap<String, Integer>();
 		amountPoint.put("Less than 6.5", pointRepo.amountMedium((float) 6.5));
 		amountPoint.put("Between 6.5 - 9", pointRepo.amountGood());
@@ -109,7 +106,7 @@ public class CompanyService{
 
 	public UserDetails loadUserById(int id) {
 		Optional<Company> company = companyRepo.findById(id);
-		if(company.isEmpty()) {
+		if (company.isEmpty()) {
 			responseException = new ResponseException("error", "Company not found");
 			throw new BadRequestException(responseException);
 		}

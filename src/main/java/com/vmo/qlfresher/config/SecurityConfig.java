@@ -59,14 +59,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-				httpSecurity.csrf().disable()
-				.authorizeRequests().antMatchers(HttpMethod.GET,"/company/auth/login", "/company/create", "/*", "/v2/api-docs", // swagger
+		httpSecurity.csrf().disable().authorizeRequests()
+				.antMatchers(HttpMethod.GET, "/company/auth/login", "/company/create", "/*", "/v2/api-docs", // swagger
 						"/webjars/**", // swagger-ui webjars
 						"/swagger-resources/**", // swagger-ui resources
 						"/swagger-ui/**")
-				.permitAll().
-				anyRequest().authenticated().and().
-				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+				.permitAll().anyRequest().authenticated().and().exceptionHandling()
+				.authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
@@ -75,9 +74,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
 		authenticationManagerBuilder.userDetailsService(companyDetailService).passwordEncoder(encoder());
 	}
-	
+
 	@Bean
-	  public InternalResourceViewResolver defaultViewResolver() {
-	    return new InternalResourceViewResolver();
-	  }
+	public InternalResourceViewResolver defaultViewResolver() {
+		return new InternalResourceViewResolver();
+	}
 }
