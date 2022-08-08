@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 
@@ -31,8 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
 
-	
 	private CompanyDetailService companyDetailService;
+
 	public SecurityConfig(@Lazy CompanyDetailService companyDetailService) {
 		this.companyDetailService = companyDetailService;
 	}
@@ -40,12 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-
-
 	@Bean(BeanIds.AUTHENTICATION_MANAGER)
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
-		// Get AuthenticationManager bean
 		return super.authenticationManagerBean();
 	}
 
@@ -61,23 +59,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		// We don't need CSRF for this example
-		httpSecurity.csrf().disable()
-				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/company/auth/login","/company/create").permitAll().
-				// all other requests need to be authenticated
+				httpSecurity.csrf().disable()
+				.authorizeRequests().antMatchers(HttpMethod.GET,"/company/auth/login", "/company/create", "/*", "/v2/api-docs", // swagger
+						"/webjars/**", // swagger-ui webjars
+						"/swagger-resources/**", // swagger-ui resources
+						"/swagger-ui/**")
+				.permitAll().
 				anyRequest().authenticated().and().
-				// make sure we use stateless session; session won't be used to
-				// store user's state.
 				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-		// Add a filter to validate the tokens with every request
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 
 	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-		authenticationManagerBuilder.userDetailsService(companyDetailService )
-				.passwordEncoder(encoder());
+		authenticationManagerBuilder.userDetailsService(companyDetailService).passwordEncoder(encoder());
 	}
+	
+	@Bean
+	  public InternalResourceViewResolver defaultViewResolver() {
+	    return new InternalResourceViewResolver();
+	  }
 }
